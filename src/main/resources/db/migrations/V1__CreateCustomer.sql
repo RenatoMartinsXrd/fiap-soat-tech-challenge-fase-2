@@ -1,0 +1,6 @@
+CREATE TABLE customer_entity (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    cpf VARCHAR(14)
+);
