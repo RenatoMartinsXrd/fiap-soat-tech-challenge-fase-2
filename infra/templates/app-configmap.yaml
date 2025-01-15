@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-app-config
+  labels:
+    app: {{ .Release.Name }}-app
+
+data:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://{{ .Release.Name }}-db:5432/postgres
