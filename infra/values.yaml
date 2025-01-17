@@ -1,0 +1,27 @@
+app:
+  image: tech-challenge-fase-1
+  replicas: 1
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  hpa:
+    minReplicas: 3
+    maxReplicas: 8
+    averageUtilization: 30
+
+db:
+  image: postgres:13
+  storage:
+    size: 1Gi
+
+secrets:
+  app:
+    SPRING_DATASOURCE_USERNAME: postgres
+    SPRING_DATASOURCE_PASSWORD: changeme
+  db:
+    POSTGRES_USER: cG9zdGdyZXM=
+    POSTGRES_PASSWORD: Y2hhbmdlbWU=

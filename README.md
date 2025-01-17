@@ -1,23 +1,75 @@
-### Some features of this project
+## Some features of this project
 
-1. Hexagonal Architecture
-2. Docker and Docker Compose
+1. TODO
 
-### Requirements to run this project locally
+## Requirements to run this project locally
 
 1. Java SDK 19
 2. Docker
-3. (Optional) Docker Desktop
-4. (Optional) Beekeeper Studio or DBeaver
+3. Docker Desktop
+4. Kubernetes
+5. (Optional) Beekeeper Studio or DBeaver
 
-### How to run this project using Dockerfile and Docker Compose
 
-1. (Windows only) Make sure you are inside WSL terminal
-2. In the same folder as the Dockerfile, run the command: ```docker build -t tech-challenge-fase-1 .```
-3. Run the command: ```docker compose up -d```
-4. List all containers with ```docker ps``` and make sure these 3 are up and running: poc-hexagonal-container,
-   pgadmin_container, postgres_container
-5. Enjoy! API should be accessible on localhost:8080
+## Recommended IntelliJ Plugins
+
+1. Lombok
+2. Restful Api Tool
+
+## How to run this project using Docker and Kubernetes
+
+### Build the Docker Image
+
+```sh
+docker build -t tech-challenge-fase-1 .
+```
+
+### Apply all Application K8s Manifests
+
+```sh
+kubectl apply -f k8s/app/app-hpa.yaml
+kubectl apply -f k8s/app/app-configmap.yaml
+kubectl apply -f k8s/app/app-deployment.yaml
+kubectl apply -f k8s/app/app-service.yaml
+kubectl apply -f k8s/app/app-secret.yaml
+```
+
+### Apply all Databse K8s Manifests
+
+```sh
+kubectl apply -f k8s/db/db-configmap.yaml
+kubectl apply -f k8s/db/db-pv.yaml
+kubectl apply -f k8s/db/db-pvc.yaml
+kubectl apply -f k8s/db/db-deployment.yaml
+kubectl apply -f k8s/db/db-service.yaml
+kubectl apply -f k8s/db/db-secret.yaml
+```
+
+### Test the application
+
+```sh
+curl -X GET "localhost:30080/customers"
+```
+
+### Useful commands
+
+```sh
+kubectl rollout restart deployment poc-hexagonal-arch
+```
+
+```sh
+watch -n 1 kubectl top pods
+```
+
+```sh
+kubectl delete all --all -n default
+```
+
+```sh
+kubectl port-forward service/poc-hexagonal-arch 30080:8080
+```
+
+Enjoy! API should be accessible on localhost:30080
 
 ### Running Docker containers
 
@@ -46,19 +98,24 @@ Username: postgres
 Password: changeme
 ```
 
-### Recommended IntelliJ Plugins
+### Debug pod
 
-1. Lombok
-2. Restful Api Tool
+```sh
+kubectl apply -f k8s/debug-pod.yaml
+```
 
-### Reverting Flyway Migrations
+```sh
+kubectl exec -it debug-pod sh
+```
 
-Flyway allows you to reverse applied migrations using the `undo` command. How to Use:
+```sh
+nslookup db-service
+```
 
-1. **Undo Scripts:**
-    - For each migration (`V__`), create a corresponding undo script (`U__`).
-    - Example: For `V2__create_table.sql`, create `U2__undo_create_table.sql` to reverse it.
+### Install Kubernetes Metrics Server
 
-2. **Run Undo:**
-   ```bash
-   flyway undo
+Metrics server is needed in order to Horizontal Pod (HPA) Autoscaling to work properly
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
