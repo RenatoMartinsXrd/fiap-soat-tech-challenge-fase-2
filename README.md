@@ -1,51 +1,28 @@
-## Some features of this project
+# Kubernetes Architecture Diagram
 
-1. TODO
+![K8S_Architecture](assets/KubernetesArchitecture.png)
 
-## Requirements to run this project locally
+# How to execute this project
 
-1. Java SDK 19
+### Requirements
 2. Docker
 3. Docker Desktop
 4. Kubernetes
-5. (Optional) Beekeeper Studio or DBeaver
+5. Helm
 
-
-## Recommended IntelliJ Plugins
-
-1. Lombok
-2. Restful Api Tool
-
-## How to run this project using Docker and Kubernetes
-
-### Build the Docker Image
+### 1. Build the Docker Image
 
 ```sh
 docker build -t tech-challenge-fase-1 .
 ```
 
-### Apply all Application K8s Manifests
+### 2. Apply all Application K8s Manifests
 
 ```sh
-kubectl apply -f k8s/app/app-hpa.yaml
-kubectl apply -f k8s/app/app-configmap.yaml
-kubectl apply -f k8s/app/app-deployment.yaml
-kubectl apply -f k8s/app/app-service.yaml
-kubectl apply -f k8s/app/app-secret.yaml
+helm install my-infra ./infra
 ```
 
-### Apply all Databse K8s Manifests
-
-```sh
-kubectl apply -f k8s/db/db-configmap.yaml
-kubectl apply -f k8s/db/db-pv.yaml
-kubectl apply -f k8s/db/db-pvc.yaml
-kubectl apply -f k8s/db/db-deployment.yaml
-kubectl apply -f k8s/db/db-service.yaml
-kubectl apply -f k8s/db/db-secret.yaml
-```
-
-### Test the application
+### 3. Test the application
 
 ```sh
 curl -X GET "localhost:30080/customers"
@@ -96,20 +73,6 @@ Host name/address: host.docker.internal
 Port: 5432
 Username: postgres
 Password: changeme
-```
-
-### Debug pod
-
-```sh
-kubectl apply -f k8s/debug-pod.yaml
-```
-
-```sh
-kubectl exec -it debug-pod sh
-```
-
-```sh
-nslookup db-service
 ```
 
 ### Install Kubernetes Metrics Server
