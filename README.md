@@ -5,6 +5,7 @@
 # How to execute this project
 
 ### Requirements
+1. WSL on Windows
 2. Docker
 3. Docker Desktop
 4. Kubernetes
