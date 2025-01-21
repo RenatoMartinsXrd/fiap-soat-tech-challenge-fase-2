@@ -20,7 +20,7 @@ docker build -t tech-challenge-fase-1 .
 ### 2. Apply all Application K8s Manifests
 
 ```sh
-helm install my-infra ./infra
+helm install fiap-tech-challenge ./infra
 ```
 
 ### 3. Test the application
