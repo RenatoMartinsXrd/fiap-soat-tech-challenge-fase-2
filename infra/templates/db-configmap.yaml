@@ -4,5 +4,5 @@ metadata:
   name: db-configmap
 data:
   POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: changeme
+  POSTGRES_USER: {{ .Values.secrets.db.POSTGRES_USER | default "" }}
+  POSTGRES_PASSWORD: {{ .Values.secrets.db.POSTGRES_PASSWORD | default "" }}
