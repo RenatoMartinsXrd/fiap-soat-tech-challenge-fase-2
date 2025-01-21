@@ -9,5 +9,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.db.storage.size }}
-  storageClassName: manual
+      storage: 1Gi

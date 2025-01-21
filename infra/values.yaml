@@ -23,5 +23,5 @@ secrets:
     SPRING_DATASOURCE_USERNAME: postgres
     SPRING_DATASOURCE_PASSWORD: changeme
   db:
-    POSTGRES_USER: cG9zdGdyZXM=
-    POSTGRES_PASSWORD: Y2hhbmdlbWU=
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: changeme
