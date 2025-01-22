@@ -35,4 +35,7 @@ public class OrderEntity {
     private List<ProductEntity> products;
 
     private Double totalPrice;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderPaymentEntity> payments;
 }

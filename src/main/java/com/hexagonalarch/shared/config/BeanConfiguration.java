@@ -2,8 +2,11 @@ package com.hexagonalarch.shared.config;
 
 import com.hexagonalarch.adapters.controllers.CustomerController;
 import com.hexagonalarch.adapters.controllers.OrderController;
+import com.hexagonalarch.adapters.controllers.PaymentController;
 import com.hexagonalarch.adapters.controllers.ProductController;
 import com.hexagonalarch.adapters.presenters.GenericConverter;
+import com.hexagonalarch.core.domain.Order;
+import com.hexagonalarch.core.ports.gateways.*;
 import com.hexagonalarch.core.ports.usecases.Order.CheckoutUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Customer.CreateCustomerUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Customer.GetAllCustomersUseCasePort;
@@ -13,9 +16,10 @@ import com.hexagonalarch.core.ports.usecases.Order.CreateOrderUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Order.GetAllOrdersUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Order.GetOrderUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Order.UpdateOrderStatusUseCasePort;
-import com.hexagonalarch.core.ports.gateways.CustomerGatewayPort;
-import com.hexagonalarch.core.ports.gateways.OrderGatewayPort;
-import com.hexagonalarch.core.ports.gateways.ProductGatewayPort;
+import com.hexagonalarch.core.ports.usecases.Payment.CreatePaymentUseCasePort;
+import com.hexagonalarch.core.ports.usecases.Payment.GetPaymentByOrderUseCasePort;
+import com.hexagonalarch.core.ports.usecases.Payment.PaymentWebhookUseCasePort;
+import com.hexagonalarch.core.ports.usecases.Payment.UpdatePaymentStatusUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Product.CreateProductUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Product.GetAllProductsUseCasePort;
 import com.hexagonalarch.core.ports.usecases.Product.GetProductUseCasePort;
@@ -24,6 +28,10 @@ import com.hexagonalarch.core.usecases.Customer.GetAllCustomersUseCase;
 import com.hexagonalarch.core.usecases.Customer.GetCustomerUseCase;
 import com.hexagonalarch.core.usecases.Customer.IdentifyOrCreateCustomerUseCase;
 import com.hexagonalarch.core.usecases.Order.*;
+import com.hexagonalarch.core.usecases.Payment.CreatePaymentUseCase;
+import com.hexagonalarch.core.usecases.Payment.GetPaymentByOrderUseCase;
+import com.hexagonalarch.core.usecases.Payment.PaymentWebhookUseCase;
+import com.hexagonalarch.core.usecases.Payment.UpdatePaymentStatusUseCase;
 import com.hexagonalarch.core.usecases.Product.CreateProductUseCase;
 import com.hexagonalarch.core.usecases.Product.GetAllProductsUseCase;
 import com.hexagonalarch.core.usecases.Product.GetProductUseCase;
@@ -70,6 +78,14 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public PaymentController paymentController(PaymentWebhookUseCasePort paymentWebhookUseCasePort,
+                                               CreatePaymentUseCasePort createPaymentUseCasePort,
+                                               GetPaymentByOrderUseCasePort getPaymentByOrderUseCasePort,
+                                               UpdatePaymentStatusUseCasePort updatePaymentStatusUseCasePort){
+        return new PaymentController(paymentWebhookUseCasePort, createPaymentUseCasePort, getPaymentByOrderUseCasePort, updatePaymentStatusUseCasePort);
+    }
+
+    @Bean
     public CreateOrderUseCasePort createOrderUseCasePort(OrderGatewayPort orderGatewayPort, CustomerGatewayPort customerGatewayPort, ProductGatewayPort productGatewayPort) {
         return new CreateOrderUseCase(orderGatewayPort, customerGatewayPort, productGatewayPort);
     }
@@ -87,6 +103,26 @@ public class BeanConfiguration {
     @Bean
     public CheckoutUseCasePort checkoutUseCasePort(OrderGatewayPort orderRepositoryPort) {
         return new CheckoutOrderUseCase(orderRepositoryPort);
+    }
+
+    @Bean
+    public CreatePaymentUseCasePort createPaymentUseCasePort(OrderGatewayPort orderGatewayPort, PaymentGatewayPort paymentGatewayPort, OrderPaymentGatewayPort orderPaymentGatewayPort){
+        return new CreatePaymentUseCase(orderGatewayPort, paymentGatewayPort, orderPaymentGatewayPort);
+    }
+
+    @Bean
+    public UpdatePaymentStatusUseCasePort updatePaymentStatusUseCasePort(PaymentWebhookUseCase paymentWebhookUseCase, OrderPaymentGatewayPort orderPaymentGatewayPort){
+        return new UpdatePaymentStatusUseCase(orderPaymentGatewayPort, paymentWebhookUseCase);
+    }
+
+    @Bean
+    public GetPaymentByOrderUseCasePort getPaymentByOrderUseCasePort( PaymentGatewayPort paymentGatewayPort, OrderPaymentGatewayPort orderPaymentGatewayPort){
+        return new GetPaymentByOrderUseCase(paymentGatewayPort, orderPaymentGatewayPort);
+    }
+
+    @Bean
+    public PaymentWebhookUseCasePort paymentWebhookUseCasePort(OrderPaymentGatewayPort paymentGatewayPort, OrderGatewayPort orderGatewayPort) {
+        return new PaymentWebhookUseCase(paymentGatewayPort, orderGatewayPort);
     }
 
     @Bean
