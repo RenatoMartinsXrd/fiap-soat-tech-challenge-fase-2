@@ -25,3 +25,6 @@ secrets:
   db:
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: changeme
+  webhook:
+    ACCESS_TOKEN_MERCADO_PAGO: substituir
+    NOTIFICATION_URL_NGROK: substituir

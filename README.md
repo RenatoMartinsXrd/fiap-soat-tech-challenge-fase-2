@@ -20,57 +20,48 @@ foi implementado um cluster Kubernetes (K8s) preparado para fazer o autoscaling 
 3. Docker Desktop
 4. Kubernetes
 5. Helm
+6. Ngrok
 6. (Opcional) Lens
 
 ---
+### 1. (Opcional) Executar o NGROK
+OBS: Esse passo somente é necessário caso deseje testar a integração com o Mercado Pago e Webhook
 
-### 1. Construir a Imagem Docker
+```sh
+ngrok http 30080
+```
+Os exemplos a seguir evidenciam como criar uma Aplicação no Mercado Pago e integrar com sua aplicação:
+
+https://github.com/mercadopago/pix-payment-sample-java/tree/main
+https://github.com/dannevesdantas/poc-mercadopago
+
+No arquivo infra/values.yaml substituir as ENVs ACCESS_TOKEN_MERCADO_PAGO e NOTIFICATION_URL_NGROK
+
+### 2. Construir a Imagem Docker
 
 ```sh
 docker build -t tech-challenge-fase-1 .
 ```
 
-### 2. Aplicar todos os Manifests do Aplicativo no Kubernetes
+### 3. Aplicar todos os Manifests do Aplicativo no Kubernetes
 
 ```sh
 helm install fiap-tech-challenge ./infra
 ```
 
-### 3. Testar o aplicativo
+### 4. Testar o aplicativo
 
 ```sh
 curl -X GET "localhost:30080/customers"
 ```
 
-### 4. Instalar o Kubernetes Metrics Server
+### 5. Instalar o Kubernetes Metrics Server
 
 O Metrics Server é necessário para que o Horizontal Pod Autoscaler (HPA) funcione corretamente.
 
 ```sh
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
-
----
-
-### Comandos úteis
-
-```sh
-kubectl rollout restart deployment poc-hexagonal-arch
-```
-
-```sh
-watch -n 1 kubectl top pods
-```
-
-```sh
-kubectl delete all --all -n default
-```
-
-```sh
-kubectl port-forward service/poc-hexagonal-arch 30080:8080
-```
-
-O API deve estar acessível em `localhost:30080`.
 
 ---
 

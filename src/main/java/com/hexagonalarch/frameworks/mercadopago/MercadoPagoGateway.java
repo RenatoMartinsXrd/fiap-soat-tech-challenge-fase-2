@@ -13,32 +13,33 @@ import com.mercadopago.client.payment.PaymentPayerRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.payment.Payment;
-import com.mercadopago.resources.payment.PaymentStatus;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class MercadoPagoGateway implements PaymentGatewayPort {
 
-    private static final String ACCESS_TOKEN = "lldslsdlsdlTEST-1342373300869318-012101-7b050b910f823465e5e9822adef80207-241386899"; // Substitua pelo seu token
+    @Value("${ACCESS_TOKEN_MERCADO_PAGO}")
+    private static String ACCESS_TOKEN_MERCADO_PAGO;
+
+    @Value("${NOTIFICATION_URL_NGROK}")
+    private static String NOTIFICATION_URL_NGROK;
+
     private final OrderPaymentConverter orderPaymentConverter;
     private final OrderPaymentGatewayPort orderPaymentGatewayPort;
 
     @Override
     public OrderPayment generatePayment(Order order) {
-        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN);
+        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN_MERCADO_PAGO);
 
         PaymentClient paymentClient = new PaymentClient();
         PaymentCreateRequest createRequest = PaymentCreateRequest.builder()
-                .notificationUrl("https://20b7-2804-14d-1c7a-980c-fd7d-14ee-7ea7-26a2.ngrok-free.app/payments/webhook")
+                .notificationUrl(NOTIFICATION_URL_NGROK + "/payments/webhook")
                 .transactionAmount(BigDecimal.valueOf(order.getTotalPrice()))
                 .paymentMethodId("pix")
                 .paymentMethod(PaymentMethodRequest.builder().type("PIX").build())
@@ -70,7 +71,7 @@ public class MercadoPagoGateway implements PaymentGatewayPort {
 
     @Override
     public OrderPayment getPaymentByOrderId(OrderPayment orderPayment) {
-        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN);
+        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN_MERCADO_PAGO);
         try {
 
             PaymentClient paymentClient = new PaymentClient();
@@ -91,7 +92,7 @@ public class MercadoPagoGateway implements PaymentGatewayPort {
 
     @Override
     public OrderPayment updatePaymentStatus(OrderPayment orderPayment) {
-        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN);
+        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN_MERCADO_PAGO);
 
         try {
             Long paymentId = orderPayment.getMercadoPagoPaymentId();
