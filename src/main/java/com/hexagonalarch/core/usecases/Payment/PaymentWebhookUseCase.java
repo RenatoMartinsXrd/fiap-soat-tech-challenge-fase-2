@@ -26,7 +26,7 @@ public class PaymentWebhookUseCase implements PaymentWebhookUseCasePort {
         Long aLong = Long.parseLong(paymentNotificationDto.getPaymentId());
 
         List<OrderPayment> byOrderId = paymentGatewayPort.findByOrderId(aLong);
-        byOrderId.get(0)
+        OrderPayment orderPayment = byOrderId.get(0);
         if (orderPayment == null) {
             throw new RuntimeException("Pagamento não encontrado para o MercadoPagoPaymentId: " + aLong);
         }
