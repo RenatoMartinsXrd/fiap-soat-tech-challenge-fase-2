@@ -1,0 +1,8 @@
+CREATE TABLE order_payment_entity (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    mercado_pago_payment_id BIGINT UNIQUE NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    order_id BIGINT NOT NULL REFERENCES order_entity(id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL
+);
