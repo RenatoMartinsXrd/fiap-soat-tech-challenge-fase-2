@@ -42,12 +42,28 @@ Quando você está desenvolvendo em um ambiente local (como Kubernetes em sua m�
 
    ```sh
    ngrok http 30080
+   ```
 
-3. O Ngrok gerará uma URL pública (como https://abc123.ngrok.io). Use essa URL para configurar a integração com o Mercado Pago no campo NOTIFICATION_URL.
+3. O Ngrok gerará uma URL pública (como https://abc123.ngrok.io). Use essa URL para configurar a integração com o Mercado Pago
 
-4. Substitua as variáveis de ambiente no arquivo infra/values.yaml com os valores gerados:
-- **`ACCESS_TOKEN_MERCADO_PAGO`**: O token de acesso gerado pela sua conta do Mercado Pago.
-- **`NOTIFICATION_URL_NGROK`**: A URL pública gerada pelo Ngrok, como `https://abc123.ngrok.io`.
+4. Substitua as variáveis de ambiente no arquivo infra/values.yaml:
+      ```sh
+      NOTIFICATION_URL_NGROK: A URL pública gerada pelo Ngrok
+      ```
+
+#### Passos para criar uma Aplicação no Mercado Pago
+1. Acesse o site do Mercado Pago Developers.
+
+2. Faça login na sua conta do Mercado Pago.
+
+3. No painel, vá até "Suas aplicações" e crie uma nova aplicação.
+
+4. Copie o Access Token gerado para a aplicação em Credenciais de Teste (usado para autenticação nas requisições à API).
+
+5. Substitua as variáveis de ambiente no arquivo infra/values.yaml com os valores gerados:
+      ```sh
+      ACCESS_TOKEN_MERCADO_PAGO: O token de acesso gerado pela sua conta do Mercado Pago.
+      ```
 
 Recursos úteis para integração:
 https://github.com/dannevesdantas/poc-mercadopago
