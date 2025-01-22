@@ -24,18 +24,36 @@ foi implementado um cluster Kubernetes (K8s) preparado para fazer o autoscaling 
 6. (Opcional) Lens
 
 ---
-### 1. (Opcional) Executar o NGROK
+### 1. (Opcional) Configurando e Executando o Ngrok + Integração Mercado Pago
 OBS: Esse passo somente é necessário caso deseje testar a integração com o Mercado Pago e Webhook
 
-```sh
-ngrok http 30080
-```
-Os exemplos a seguir evidenciam como criar uma Aplicação no Mercado Pago e integrar com sua aplicação:
+O **Ngrok** é utilizado para expor localmente sua aplicação rodando no Kubernetes para um endereço público na internet. Esse passo é necessário apenas se você deseja testar a integração com o **Mercado Pago** e os **webhooks** do sistema.
 
-https://github.com/mercadopago/pix-payment-sample-java/tree/main
+#### Por que usar o Ngrok?
+
+Quando você está desenvolvendo em um ambiente local (como Kubernetes em sua máquina), o Mercado Pago precisa enviar notificações para sua aplicação por meio de webhooks. Porém, como o ambiente local não é acessível publicamente, o **Ngrok** resolve essa limitação, criando um túnel seguro que expõe sua aplicação por meio de uma URL pública temporária.
+
+#### Passos para usar o Ngrok:
+
+1. Instale o **Ngrok** no seu sistema, se ainda não tiver:
+   - [Download Ngrok](https://ngrok.com/download)
+
+2. Execute o comando abaixo para expor o serviço da aplicação (assumindo que o Kubernetes está rodando na porta `30080`):
+
+   ```sh
+   ngrok http 30080
+
+3. O Ngrok gerará uma URL pública (como https://abc123.ngrok.io). Use essa URL para configurar a integração com o Mercado Pago no campo NOTIFICATION_URL.
+
+4. Substitua as variáveis de ambiente no arquivo infra/values.yaml com os valores gerados:
+- **`ACCESS_TOKEN_MERCADO_PAGO`**: O token de acesso gerado pela sua conta do Mercado Pago.
+- **`NOTIFICATION_URL_NGROK`**: A URL pública gerada pelo Ngrok, como `https://abc123.ngrok.io`.
+
+Recursos úteis para integração:
 https://github.com/dannevesdantas/poc-mercadopago
 
-No arquivo infra/values.yaml substituir as ENVs ACCESS_TOKEN_MERCADO_PAGO e NOTIFICATION_URL_NGROK
+[Documentação oficial e exemplos do Mercado Pago:](https://www.mercadopago.com.br/developers/en/docs)
+
 
 ### 2. Construir a Imagem Docker
 
