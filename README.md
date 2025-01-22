@@ -1,35 +1,58 @@
-# Kubernetes Architecture Diagram
+# O Problema
+
+A lanchonete está enfrentando um alto número de requisições devido ao aumento da demanda. 
+Para lidar com essa carga e garantir alta disponibilidade e escalabilidade, 
+foi implementado um cluster Kubernetes (K8s) preparado para fazer o autoscaling dos PODs com HPA.
+
+---
+
+# Diagrama da Arquitetura Kubernetes
 
 ![K8S_Architecture](assets/KubernetesArchitecture.png)
 
-# How to execute this project
+---
 
-### Requirements
-1. WSL on Windows
+# Como executar este projeto
+
+### Requisitos
+1. WSL no Windows
 2. Docker
 3. Docker Desktop
 4. Kubernetes
 5. Helm
+6. (Opcional) Lens
 
-### 1. Build the Docker Image
+---
+
+### 1. Construir a Imagem Docker
 
 ```sh
 docker build -t tech-challenge-fase-1 .
 ```
 
-### 2. Apply all Application K8s Manifests
+### 2. Aplicar todos os Manifests do Aplicativo no Kubernetes
 
 ```sh
 helm install fiap-tech-challenge ./infra
 ```
 
-### 3. Test the application
+### 3. Testar o aplicativo
 
 ```sh
 curl -X GET "localhost:30080/customers"
 ```
 
-### Useful commands
+### 4. Instalar o Kubernetes Metrics Server
+
+O Metrics Server é necessário para que o Horizontal Pod Autoscaler (HPA) funcione corretamente.
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+---
+
+### Comandos úteis
 
 ```sh
 kubectl rollout restart deployment poc-hexagonal-arch
@@ -47,39 +70,25 @@ kubectl delete all --all -n default
 kubectl port-forward service/poc-hexagonal-arch 30080:8080
 ```
 
-Enjoy! API should be accessible on localhost:30080
+O API deve estar acessível em `localhost:30080`.
 
-### Running Docker containers
+---
 
-1. Access the folder where docker-compose.yml is located
-2. Run the command:
+### Executando contêineres Docker
 
-```
-docker compose up -d 
-```
-
-### Accessing OpenAPI/Swagger
-
-1. Open the url on your web browser: ```http://localhost:8080/swagger-ui/index.html```
-
-### Connecting to Postgres using PGAdmin
-
-1. Access PGAdmin on any web browser using the address: http://localhost:5050/
-2. If this is the first time, set a master password, such as: master
-3. Create a server with the following configuration:
-
-```
-Name: Any Name
-Host name/address: host.docker.internal
-Port: 5432
-Username: postgres
-Password: changeme
-```
-
-### Install Kubernetes Metrics Server
-
-Metrics server is needed in order to Horizontal Pod (HPA) Autoscaling to work properly
+1. Acesse a pasta onde o arquivo `docker-compose.yml` está localizado.
+2. Execute o comando:
 
 ```sh
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+docker compose up -d
+```
+
+---
+
+### Acessando a documentação OpenAPI/Swagger
+
+1. Abra o URL no seu navegador:
+
+```sh
+http://localhost:30080/swagger-ui/index.html
 ```
